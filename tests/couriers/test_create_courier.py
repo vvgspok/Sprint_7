@@ -9,12 +9,13 @@ class TestCreateCouriers:
 
     @allure.title('Успешное создание заказа')
     def test_create_courier(self, courier):
-        assert courier[1] == 201 and courier[2] == CREATE_COURIERS_RESPONSE[0]
+        response, _ = courier
+        assert response.status_code == 201 and response.text == CREATE_COURIERS_RESPONSE[0]
 
     @allure.title('Получение ошибки при создании дубликата курьера')
     def test_create_couriers_login_exists(self):
-        courire_data = CourierMethods().create_courier(couriers_existing)
-        assert courire_data.status_code == 409 and courire_data.text == CREATE_COURIERS_RESPONSE[1]
+        courier_data = CourierMethods().create_courier(couriers_existing)
+        assert courier_data.status_code == 409 and courier_data.text == CREATE_COURIERS_RESPONSE[1]
 
     @pytest.mark.parametrize(
         'params',
@@ -24,6 +25,6 @@ class TestCreateCouriers:
         ]
     )
     @allure.title('Получения ошибки при создании курьера без логина или пароля')
-    def test_create_courier_without_required_field(self,params):
-        courire_data = CourierMethods().create_courier(params)
-        assert courire_data.status_code == 400 and courire_data.text == CREATE_COURIERS_RESPONSE[2]
+    def test_create_courier_without_required_field(self, params):
+        courier_data = CourierMethods().create_courier(params)
+        assert courier_data.status_code == 400 and courier_data.text == CREATE_COURIERS_RESPONSE[2]
